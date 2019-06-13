@@ -1,0 +1,25 @@
+Suposições:
+    O número de falhas é um processo de Poisson(λ)
+    Então os tempos entre falhas X_n ~ Exp(λ)
+
+Passo 1: Gerar aleatoreamente tempos entre falhas:
+    X_k ~ Exp(λ), k ε 1..n
+    {X_1, ..., X_n} ← valores gerados
+
+Passo 2: Calcular os tempos de falha
+    T_k = Σ_(i=1)^(k)(X_i)
+    {T_1, ..., T_n} ← valores gerados
+
+Passo 3: Calcular o valor atual dos custos de reposição
+    C_k = β*e^(-αT_k) , k ε 1..n
+    {C_1, ..., C_n} ← custos calculados
+
+Passo 4:
+    Č = (1/n)*Σ_i=1^(n)(Ci) →_(n→∞)E(C)
+
+Conclusão:
+    I - Comparar os valores de Č com o valor de E(C) calculado teoricamente
+    II - Faça uma análise estatística descritiva dos processos X_n, T_n, C_n
+    (Média, Moda, Mediana), (Desvio, Amplitude, Histograma)
+
+
