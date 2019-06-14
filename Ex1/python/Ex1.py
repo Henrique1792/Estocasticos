@@ -1,9 +1,9 @@
 import random as rd
+from math import exp
 
 
 def main():
     # Passo 1: gerar os tempos entre falhas
-    # fixando seed
     rd.seed()
 
     # vetor X gerado
@@ -12,7 +12,7 @@ def main():
     for i in range(10):
         vX.append(rd.expovariate(0.001))
     vX.sort()
-    print(vX)
+    print("vX: ", vX, "\n")
 
     # Passo 2: Calcular os tempos de falha
     TK = []
@@ -21,7 +21,16 @@ def main():
         for i in range(k):
             TK[k] = TK[k] + vX[i]
 
-    print(TK)
+    print("TK: ", TK, "\n")
+
+    # Passo 3: Calcular o valor atual dos custos de reposição
+    # função  definida por lambda
+
+    fnc = lambda x: 10*exp(-0.952380952381*x)
+    CK = []
+    for k in TK:
+        CK.append(fnc(k))
+    print("CK: ", CK, "\n")
 
 # Medidas de posição
 #    try:
