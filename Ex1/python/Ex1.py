@@ -1,4 +1,5 @@
 import random as rd
+import matplotlib.pyplot as plt
 from math import exp
 from statistics import mean, median, mode, variance, stdev, StatisticsError
 
@@ -36,17 +37,24 @@ def main():
     for k in TK:
         CK.append(fnc(k))
     print("CK: ", CK, "\n")
-
+    meanVal = mean(CK)
 # Medidas de posição
     try:
-        print("Média: %f\nMediana: %f\nModa: %f \n" % (mean(CK),
+        print("Média: %f\nMediana: %f\nModa: %f \n" % (meanVal,
                                                        median(CK),
                                                        mode(CK)))
     except StatisticsError:
-        print("Média: %f\nMediana: %f\nSem Moda\n" % (mean(CK),
+        print("Média: %f\nMediana: %f\nSem Moda\n" % (meanVal,
                                                       median(CK)))
 # Medidas de Dispersão
     print("Variância: %f\nDesvio Padrão: %f\n" % (variance(CK), stdev(CK)))
+
+# Construção do gráfico
+    plt.xlabel("Tempo")
+    plt.ylabel("Custo")
+    plt.xlim(0, 1000)
+    plt.scatter(vX, CK)
+    plt.show()
 
 
 main()

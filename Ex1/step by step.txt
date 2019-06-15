@@ -14,7 +14,7 @@ Passo 3: Calcular o valor atual dos custos de reposição
     C_k = β*e^(-αT_k) , k ε 1..n
     {C_1, ..., C_n} ← custos calculados
 
-Passo 4:
+Passo 4: estimar o valor médio
     Č = (1/n)*Σ_i=1^(n)(Ci) →_(n→∞)E(C)
 
 Conclusão:
