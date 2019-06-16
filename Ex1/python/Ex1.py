@@ -1,7 +1,9 @@
+import numpy as np
 import random as rd
-import matplotlib.pyplot as plt
 from math import exp
+from bokeh.plotting import output_file, show
 from statistics import mean, median, mode, variance, stdev, StatisticsError
+from genPlot import makeHistogram
 
 
 def main():
@@ -14,7 +16,7 @@ def main():
     for i in range(10):
         vX.append(rd.expovariate(0.001))
     vX.sort()
-    print("vX: ", vX, "\n")
+    print("\nvX: ", vX, "\n")
 
     # Passo 2: Calcular os tempos de falha
     TK = []
@@ -48,13 +50,26 @@ def main():
                                                       median(CK)))
 # Medidas de Dispersão
     print("Variância: %f\nDesvio Padrão: %f\n" % (variance(CK), stdev(CK)))
-
 # Construção do gráfico
-    plt.xlabel("Tempo")
-    plt.ylabel("Custo")
-    plt.xlim(0, 1000)
-    plt.scatter(vX, CK)
-    plt.show()
+    # Construir histograma da distribuição exponencial
+
+    hist = np.histogram(CK, density=True, bins=50)
+# Plot da Amostra
+    plt = makeHistogram("Custo", hist, TK, vX, CK)
+    plt.circle(vX, CK, legend="Amostra", fill_color='red', size=8)
+
+    output_file("plot.html")
+    show(plt)
+#     plt = histogram(
+#        title="Tempo e custos",
+#        x_axis_label="Tempo",
+#        y_axis_label="Custo"
+#     )
+#     plt.histogram(vX, CK, legend="Flutuação")
+#     plt.line(vX, meanVal, legend="Custo Médio",
+#              line_color="blue", line_width=2)
+#     plt.circle(vX, CK, legend="Medidas", fill_color="red", size=8)
+#     show(plt)
 
 
 main()
