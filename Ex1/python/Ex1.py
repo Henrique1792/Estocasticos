@@ -53,10 +53,9 @@ def main():
 # Construção do gráfico
     # Construir histograma da distribuição exponencial
 
-    hist = np.histogram(CK, density=True, bins=50)
 # Plot da Amostra
-    plt = makeHistogram("Custo", hist, TK, vX, CK)
-    plt.circle(vX, CK, legend="Amostra", fill_color='red', size=8)
+    plt = makeHistogram("Custo", vX, CK)
+    # plt.circle(vX, CK, legend="Amostra", fill_color='red', size=8)
 
     output_file("plot.html")
     show(plt)
