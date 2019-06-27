@@ -79,16 +79,6 @@ def main():
     plt.circle(vX, CK, legend="Amostra", fill_color='red', size=8)
 
     export_png(plt, filename="../../assets/data/genPlot.png")
-#     plt = histogram(
-#        title="Tempo e custos",
-#        x_axis_label="Tempo",
-#        y_axis_label="Custo"
-#     )
-#     plt.histogram(vX, CK, legend="Flutuação")
-#     plt.line(vX, meanVal, legend="Custo Médio",
-#              line_color="blue", line_width=2)
-#     plt.circle(vX, CK, legend="Medidas", fill_color="red", size=8)
-#     show(plt)
 
 
 main()
