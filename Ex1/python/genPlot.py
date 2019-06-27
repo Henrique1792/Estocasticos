@@ -6,8 +6,8 @@ def makeHistogram(title, x, y):
     p.vbar(x=x, top=y, width=80)
     p.line(x, y, line_color="red", line_width=0.8, legend="Comportamento")
     p.legend.background_fill_color = "#fefefe"
-    p.xaxis.axis_label = 'Time'
-    p.yaxis.axis_label = 'Value'
+    p.xaxis.axis_label = 'Tempo'
+    p.yaxis.axis_label = 'Valor'
     p.x_range.start = 0
     p.x_range.end = max(x)
     p.y_range.start = min(y)
