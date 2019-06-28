@@ -59,3 +59,6 @@ def writeJson():
 
     with open("../assets/data/sort_data.json", "w") as wFile:
         json.dump(output, wFile, indent=4)
+
+
+writeJson()

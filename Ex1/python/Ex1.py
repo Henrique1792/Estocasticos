@@ -16,14 +16,13 @@ def main():
     # vetor X gerado
     vX = []
 
-    for i in range(10):
-        vX.append(rd.expovariate(0.001))
+    for i in range(1000000):
+        vX.append(int(rd.expovariate(0.001)))
     vX.sort()
-    print("\nvX: ", vX, "\n")
 
     # Passo 2: Calcular os tempos de falha
     TK = []
-    for k in range(10):
+    for k in range(len(vX)):
         TK.append(0)
         if(k == 0):
             TK[k] = vX[k]
@@ -32,7 +31,6 @@ def main():
                 TK[k] = TK[k] + vX[i]
         TK[k] = TK[k] / 87600
 
-    print("TK: ", TK, "\n")
 
     # Passo 3: Calcular o valor atual dos custos de reposição
     # função  definida por lambda
@@ -41,7 +39,6 @@ def main():
     CK = []
     for k in TK:
         CK.append(fnc(k))
-    print("CK: ", CK, "\n")
     meanVal = mean(CK)
     # gen Json file for next exercises
 # Medidas de posição
@@ -72,11 +69,12 @@ def main():
 # Construção do gráfico
     with open("../../assets/data/generated.json", "w") as wFile:
         json.dump(data, wFile, indent=4)
+        wFile.close()
     # Construir histograma da distribuição exponencial
 
 # Plot da Amostra
     plt = makeHistogram("Relação de custo e tempo entre falhas", vX, CK)
-    plt.circle(vX, CK, legend="Amostra", fill_color='red', size=8)
+    # plt.circle(vX, CK, legend="Amostra", fill_color='red', size=8)
 
     export_png(plt, filename="../../assets/data/genPlot.png")
 

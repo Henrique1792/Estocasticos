@@ -1,3 +1,4 @@
+import numpy as np
 import json
 from math import exp, log
 
@@ -24,5 +25,7 @@ def main():
         k = k+1
 
     print("\nFx: ", Fx, "\nfx: ", fx, "\n")
+    print("percentil 95: ", np.percentile(Xn['Sample'], 95.0), "\n")
+
 
 main()
