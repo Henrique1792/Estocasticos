@@ -2,23 +2,38 @@ import json
 import numpy as np
 import matplotlib.pyplot as plt
 # method block
-from math import exp
-from scipy.stats import expon
+from math import exp, log
+# from scipy.stats import expon
 import seaborn as sns
 
-sSize = 10000
+LAMBDA = 0.001
+
+
+def inverse(x):
+    return (-1000*log(1-x))
+
+
+def exp_sample(vX, TK):
+    k = 0
+    while(k < 87600):
+        vX.append(inverse(np.random.uniform()))
+        TK.append(sum(vX))
+        k = sum(vX)
 
 
 def ex1():
     data = {}
-    vX = expon.rvs(scale=1000, size=sSize)
-    TK = np.array([vX[0:i+1].sum(axis=0) / sSize for i in range(sSize)])
+#     vX = expon.rvs(scale=1000, size=sSize)
+    vX = []
+    TK = []
+    exp_sample(vX, TK)
+    print(vX, '\n', TK)
+    # TK = np.array([vX[0:i+1].sum(axis=0) / sSize for i in range(sSize)])
     print(max(TK))
     print(TK)
     T_vida = []
-    T_vida.append(0)
-    T_vida[0] = TK[0]
-    T_vida += [TK[i+1]-TK[i] for i in range(sSize-1)]
+    T_vida.append(TK[0])
+    T_vida += [TK[i+1]-TK[i] for i in range(len(TK)-1)]
 
     data['Tempo de vida - 10º componente'] = T_vida[9]
     data['Tempo de vida - mediana'] = np.median(np.sort(T_vida))
@@ -32,7 +47,7 @@ def ex1():
     sns.distplot(T_vida)
     plt.savefig("../../assets/data/Ex1.png")
     plt.clf()
-    return vX
+    return TK
 
 
 def ex2(times):
@@ -40,8 +55,8 @@ def ex2(times):
     alpha = (1/1.05)
     beta = 10
     cost = []
-    for i in range(sSize):
-        cost.append(beta * exp(-1 * alpha * (times[i]/(8760))))
+    for i in range(len(times)):
+        cost.append(beta * exp(-1 * alpha * (times[i]/(87600))))
 
     data['Custo de manutenção - 10º componente'] = cost[9]
     data['Custo de manutenção - media'] = np.mean(np.sort(cost))
@@ -57,8 +72,8 @@ def ex2(times):
 
 
 def main():
-    vX = ex1()
-    ex2(vX)
+    TK = ex1()
+    ex2(TK)
 
 
 main()
