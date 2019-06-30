@@ -8,6 +8,7 @@ pylint = "*"
 numpy = "*"
 scipy = "*"
 matplotlib = "*"
+seaborn = "*"
 
 [dev-packages]
 
