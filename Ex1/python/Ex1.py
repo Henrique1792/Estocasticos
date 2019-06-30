@@ -1,98 +1,64 @@
-# import block
-import random as rd
 import json
 import numpy as np
+import matplotlib.pyplot as plt
 # method block
 from math import exp
-from bokeh.io import export_png
-from statistics import mean, median, mode, variance, stdev, StatisticsError
-from genPlot import makeHistogram
 from scipy.stats import expon
+import seaborn as sns
+
+sSize = 10000
 
 
-def repoCost(x):
+def ex1():
+    data = {}
+    vX = expon.rvs(scale=1000, size=sSize)
+    TK = np.array([vX[0:i+1].sum(axis=0) / sSize for i in range(sSize)])
+    print(max(TK))
+    print(TK)
+    T_vida = []
+    T_vida.append(0)
+    T_vida[0] = TK[0]
+    T_vida += [TK[i+1]-TK[i] for i in range(sSize-1)]
+
+    data['Tempo de vida - 10º componente'] = T_vida[9]
+    data['Tempo de vida - mediana'] = np.median(np.sort(T_vida))
+    data['Tempo de vida - media'] = np.mean(np.sort(T_vida))
+    data['Tempo de vida - desvio padrão'] = np.std(np.sort(T_vida))
+    data['Tempo de vida - variância'] = np.var(np.sort(T_vida))
+    data['Tempo de vida - percentil95'] = np.percentile(np.sort(T_vida), 95)
+
+    with open('../../assets/data/ex1.json', 'w') as wJson:
+        json.dump(data, wJson, indent=4)
+    sns.distplot(T_vida)
+    plt.savefig("../../assets/data/Ex1.png")
+    plt.clf()
+    return vX
+
+
+def ex2(times):
+    data = {}
+    alpha = (1/1.05)
     beta = 10
-    return beta*exp(-0.952380952381*x)
+    cost = []
+    for i in range(sSize):
+        cost.append(beta * exp(-1 * alpha * (times[i]/(8760))))
+
+    data['Custo de manutenção - 10º componente'] = cost[9]
+    data['Custo de manutenção - media'] = np.mean(np.sort(cost))
+    data['Custo de manutenção - mediana'] = np.median(np.sort(cost))
+    data['Custo de manutenção - desvio padrão'] = np.std(np.sort(cost))
+    data['Custo de manutenção - variância'] = np.var(np.sort(cost))
+    data['Custo - percentil95'] = np.percentile(np.sort(cost), 95)
+
+    with open('../../assets/data/ex2.json', 'w') as wJson:
+        json.dump(data, wJson, indent=4)
+    sns.distplot(cost)
+    plt.savefig("../../assets/data/Ex2.png")
 
 
 def main():
-    data = {}
-    exponScale = 0.001
-    sample = 10000
-    nHours = 87600
-    vX = expon.rvs(scale=exponScale, size=sample)
-    # print(vX)
-    TK = np.array([vX[0:i+1].sum(axis=0)/nHours for i in range(sample)])
-    # print(TK)
-    CK = []
-    for i in range(sample):
-        CK.append(repoCost(TK[i]))
-    
-    print("10º componente: %.10f\n" % (TK[9] - TK[8]))
-    print("Custo do 10º componente: %f " % CK[9])
-    
-    data['meanTK'] = mean(TK)
-    data['varianceTK'] = variance(TK)
-    data['amplitudeTK'] = max(TK) - min(TK)
-    data['stdevTK'] = stdev(TK)
-    data['percentileTK'] = np.percentile(TK, 95, axis=0)
-    data['meanCK'] = mean(CK)
+    vX = ex1()
+    ex2(vX)
 
-    print(data)
-# Passo 2: Calcular os tempos de falha
-#     TK = []
-#     for k in range(len(vX)):
-#         TK.append(0)
-#         if(k == 0):
-#             TK[k] = vX[k] / 87600
-#         else:
-#             for i in range(k):
-#                 TK[k] = TK[k] + (vX[i] / 87600)
-# 
-#     # Passo 3: Calcular o valor atual dos custos de reposição
-#     # função  definida por lambda
-#     # 0.952380952381 obtido de: 1/(1+r), com r = 0.05
-#     CK = []
-#     for k in TK:
-#         CK.append(repoCost(k))
-#     meanVal = mean(CK)
-#     # gen Json file for next exercises
-# # Medidas de posição
-#     try:
-#         print("Média: %f\nMediana: %f\nModa: %f \n" % (meanVal,
-#                                                        median(CK),
-#                                                        mode(CK)))
-# 
-#         data['X'] = vX
-#         data['Tk'] = TK
-#         data['cost'] = CK
-#         data['mean'] = meanVal
-#         data['variance'] = variance(CK)
-#         data['mode'] = mode(CK)
-#         data['stdev'] = stdev(CK)
-#     except StatisticsError:
-#         print("Média: %f\nMediana: %f\nSem Moda\n" % (meanVal,
-#                                                       median(CK)))
-#         data['X'] = vX
-#         data['Tk'] = TK
-#         data['cost'] = CK
-#         data['mean'] = meanVal
-#         data['variance'] = variance(CK)
-#         data['mode'] = 0
-#         data['stdev'] = stdev(CK)
-# # Medidas de Dispersão
-#     print("Variância: %f\nDesvio Padrão: %f\n" % (variance(CK), stdev(CK)))
-# # Construção do gráfico
-#     with open("../../assets/data/generated.json", "w") as wFile:
-#         json.dump(data, wFile, indent=4)
-#         wFile.close()
-#     # Construir histograma da distribuição exponencial
-# 
-# # Plot da Amostra
-#     plt = makeHistogram("Relação de tempo de falhas e custo", TK, CK)
-#     # plt.circle(vX, CK, legend="Amostra", fill_color='red', size=8)
-# 
-#     export_png(plt, filename="../../assets/data/genPlot.png")
-# 
-# 
+
 main()
