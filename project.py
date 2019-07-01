@@ -1,6 +1,6 @@
 import numpy as np
 
-from scipy.stats import expon, poisson, norm
+from scipy.stats import expon, poisson, norm, uniform
 from scipy import exp
 
 import matplotlib.pyplot as plt
@@ -11,24 +11,33 @@ INFLATION_RATE = 0.05
 ALPHA = (1.0 / (1 + INFLATION_RATE))
 BETA = 10.0
 
-SAMPLE_SIZE = 10000
-TIME_PERIOD = 87600.0
+SAMPLE_SIZE = 100000000
+TIME_PERIOD = 87600.0 / 8760.0
 
-LAMBDA = 0.001
-EXPON_SCALE = (1.0 / LAMBDA)
+LAMBDA = 0.001 * 24 * 365
+EXPON_SCALE = (1.0 / (0.001 * 24 * 365))
 
 
 def ex_1():
 
-    fail_time_intervals = expon.rvs(scale=EXPON_SCALE, size=SAMPLE_SIZE)
+    uniform_samples = uniform.rvs(size = SAMPLE_SIZE)
+    # print(uniform_samples)
+
+    exponential_samples = expon.ppf(uniform_samples, scale=EXPON_SCALE)
+    # print(exponential_samples)
+
+    fail_time_intervals = np.array([])
+    while np.sum(fail_time_intervals) < TIME_PERIOD:
+        fail_time_intervals = np.append(fail_time_intervals, np.random.choice(exponential_samples, 1))
+        # print(np.sum(fail_time_intervals))
     # print(fail_time_intervals)
 
-    time_of_fails = np.array([fail_time_intervals[0:i + 1].sum(axis=0) / TIME_PERIOD for i in range(SAMPLE_SIZE)])
+    time_of_fails = np.array([fail_time_intervals[0:i + 1].sum(axis=0) for i in range(len(fail_time_intervals))])
     # print(time_of_fails)
 
     lifespawn_of_components = []
     lifespawn_of_components.append(time_of_fails[0])
-    lifespawn_of_components += [time_of_fails[i + 1] - time_of_fails[i] for i in range(SAMPLE_SIZE - 1)]
+    lifespawn_of_components += [time_of_fails[i + 1] - time_of_fails[i] for i in range(len(time_of_fails) - 1)]
     # print(lifespawn_of_components)
 
     print("Lifespawn of 10th component: %f" % lifespawn_of_components[9])
@@ -43,11 +52,11 @@ def ex_1():
     plt.savefig("histogram_ls.png")
     plt.clf()  
 
-    return fail_time_intervals
+    return time_of_fails
 
 def ex_2(times):
 
-    replacement_costs = np.array([(BETA * exp((-1.0) * ALPHA * (times[i] / (TIME_PERIOD * 0.1)))) for i in range(SAMPLE_SIZE)])
+    replacement_costs = np.array([(BETA * exp((-1.0) * ALPHA * times[i])) for i in range(len(times))])
     # print(replacement_costs)
 
     print("Replacement cost of 10th component: %f" % replacement_costs[9])
@@ -63,4 +72,3 @@ def ex_2(times):
 
 data = ex_1()
 ex_2(data)
-
